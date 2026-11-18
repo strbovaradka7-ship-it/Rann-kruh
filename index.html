@@ -1,0 +1,1062 @@
+<title>Ranný kruh</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap">
+<style>
+/* Layout: veselá stránka podobná zošitu pre deti. Hore dátum v kalendárovom lístku a týždeň, potom bublina so zaujímavosťou a päť farebných kariet, každá s vlastnou ikonou a veľkým kolieskom na odškrtnutie. */
+:root {
+  --bg: #EAF3FF;
+  --blob1: #DCEBFF;
+  --blob2: #FFEFCF;
+  --surface: #FFFFFF;
+  --ink: #22214A;
+  --muted: #5B5E86;
+  --line: #D2DCF2;
+  --accent: #4B3FD0;
+  --accent-ink: #FFFFFF;
+  --emo: #D93A63;    --emo-bg: #FFE6EC;
+  --sit: #7A48DA;    --sit-bg: #EDE4FF;
+  --dych: #138F61;   --dych-bg: #DDF6EA;
+  --rytmus: #B87400; --rytmus-bg: #FFF1CC;
+  --fakt: #1C72CE;   --fakt-bg: #DFEEFF;
+  --star: #FFC21A; --star-line: #E59A00;
+  --font-display: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --scale: 1;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14173A; --blob1: #1A1F4A; --blob2: #2A2540; --surface: #1F2350; --ink: #F1F2FF; --muted: #A9ADDB; --line: #343A78;
+    --accent: #9C93FF; --accent-ink: #14173A;
+    --emo: #FF8FA8; --emo-bg: #3B2040;
+    --sit: #BCA3FF; --sit-bg: #2E2459;
+    --dych: #5FDDA5; --dych-bg: #1A3B45;
+    --rytmus: #FFC24D; --rytmus-bg: #3F3320;
+    --fakt: #7DB8FF; --fakt-bg: #1B3560;
+    --star: #FFC24D; --star-line: #FFE29A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14173A; --blob1: #1A1F4A; --blob2: #2A2540; --surface: #1F2350; --ink: #F1F2FF; --muted: #A9ADDB; --line: #343A78;
+  --accent: #9C93FF; --accent-ink: #14173A;
+  --emo: #FF8FA8; --emo-bg: #3B2040;
+  --sit: #BCA3FF; --sit-bg: #2E2459;
+  --dych: #5FDDA5; --dych-bg: #1A3B45;
+  --rytmus: #FFC24D; --rytmus-bg: #3F3320;
+  --fakt: #7DB8FF; --fakt-bg: #1B3560;
+  --star: #FFC24D; --star-line: #FFE29A;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: radial-gradient(circle at 6% -4%, var(--blob1) 0 260px, transparent 261px), radial-gradient(circle at 104% 14%, var(--blob2) 0 200px, transparent 201px), var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body); font-size: calc(17px * var(--scale)); line-height: 1.5;
+  padding-block: 20px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+.wrap.board { max-width: 1200px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; margin: 0; text-wrap: balance; line-height: 1.12; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+/* hlavička */
+.top { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 600; font-size: 1.1em; color: var(--ink); }
+.brand svg { width: 34px; height: 34px; flex: none; }
+.brand small { font-family: var(--font-body); font-weight: 700; font-size: .78em; color: var(--muted); }
+.tools { display: flex; gap: 8px; flex-wrap: wrap; }
+.ghost { background: var(--surface); border: 2px solid var(--line); border-radius: 999px; padding: 7px 14px; font-weight: 700; font-size: .82em; }
+.ghost:hover { border-color: var(--accent); }
+.ghost[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+.datehead { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between; }
+.dleft { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.dbadge { width: 84px; flex: none; border-radius: 18px; overflow: hidden; background: var(--surface); border: 2px solid var(--accent); text-align: center; box-shadow: 0 5px 0 var(--accent); }
+.dbadge .dm { display: block; background: var(--accent); color: var(--accent-ink); font-weight: 800; font-size: .75em; letter-spacing: .12em; padding: 3px 0; }
+.dbadge .dd { display: block; font-family: var(--font-display); font-weight: 600; font-size: 2.3em; line-height: 1.25; }
+.datehead h1 { font-size: clamp(2rem, 6vw, 3rem); }
+.datehead .sub { color: var(--muted); font-weight: 700; margin-top: 2px; }
+.nav { display: flex; gap: 8px; }
+.nav button { background: var(--surface); border: 2px solid var(--line); border-radius: 16px; min-width: 52px; min-height: 52px; font-weight: 800; padding: 0 16px; }
+.nav button:hover { border-color: var(--accent); }
+
+/* týždeň */
+.week { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.week button { background: var(--surface); border: 2px solid var(--line); border-radius: 20px; padding: 8px 4px 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight: 800; font-size: .88em; }
+.week .dn { color: var(--muted); font-weight: 700; }
+.week .dots { display: flex; gap: 3px; }
+.week .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.week .dots i.on { background: var(--accent); }
+.week .st { font-size: .8em; color: var(--muted); font-weight: 800; min-height: 1.2em; }
+.week button.full { background: var(--dych-bg); border-color: var(--dych); }
+.week button.part { background: var(--rytmus-bg); border-color: var(--rytmus); }
+.week button.miss { background: var(--emo-bg); border-color: color-mix(in srgb, var(--emo) 50%, var(--line)); }
+.week button[aria-current="date"] { box-shadow: 0 0 0 3px var(--accent); }
+
+.banner { background: var(--rytmus-bg); border: 2px solid var(--rytmus); border-radius: 16px; padding: 10px 14px; font-weight: 700; font-size: .92em; }
+.board .themebar, .board details, .board .banner.wk { display: none; }
+
+.themebar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: var(--surface); border: 2px dashed var(--line); border-radius: 20px; padding: 10px 14px; }
+.themebar label { font-weight: 800; font-size: .9em; }
+.themebar input { flex: 1 1 200px; min-width: 0; font: inherit; padding: 8px 14px; border-radius: 999px; border: 2px solid var(--line); background: var(--bg); color: var(--ink); }
+.themebar .save { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 999px; padding: 9px 18px; font-weight: 800; }
+.themebar .clear { background: none; border: 0; color: var(--muted); text-decoration: underline; font-size: .85em; }
+
+/* zaujímavosť dňa: bublina */
+.fact { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: start; background: var(--surface); border: 3px solid var(--fakt); border-radius: 30px 30px 30px 8px; padding: 20px 24px; }
+.fbadge { width: 60px; height: 60px; border-radius: 50%; background: var(--fakt); display: grid; place-items: center; flex: none; }
+.fbadge svg { width: 34px; height: 34px; stroke: var(--surface); }
+.fact .kicker { font-weight: 800; font-size: .78em; letter-spacing: .08em; text-transform: uppercase; color: var(--fakt); }
+.fact h2 { font-size: clamp(1.35rem, 3.4vw, 1.8rem); margin: 2px 0 6px; }
+.fact p { margin: 0; max-width: 65ch; }
+.fact .q { color: var(--muted); font-weight: 700; margin-top: 8px; }
+
+/* hviezdy */
+.progress { display: flex; align-items: center; gap: 12px; font-weight: 800; }
+.stars { display: flex; gap: 6px; }
+.star { width: 38px; height: 38px; fill: var(--line); stroke: none; transition: transform .25s; }
+.star.on { fill: var(--star); stroke: var(--star-line); stroke-width: 1.2; stroke-linejoin: round; transform: scale(1.08); }
+
+/* úlohy */
+.tasks { display: flex; flex-direction: column; gap: 14px; list-style: none; margin: 0; padding: 0; }
+.task { --c: var(--accent); --cbg: var(--surface); background: var(--cbg); border: 3px solid color-mix(in srgb, var(--c) 35%, transparent); border-radius: 28px; transition: background .2s, border-color .2s; }
+.task label { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 16px; padding: 18px 20px; cursor: pointer; align-items: center; }
+.task input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.ico { order: 1; width: 64px; height: 64px; border-radius: 50%; background: var(--c); display: grid; place-items: center; }
+.ico svg { width: 36px; height: 36px; stroke: var(--surface); }
+.body { order: 2; min-width: 0; }
+.box { order: 3; width: 54px; height: 54px; border-radius: 50%; border: 4px solid var(--c); background: var(--surface); display: grid; place-items: center; }
+.box svg { width: 30px; height: 30px; stroke: var(--surface); stroke-width: 3.6; fill: none; opacity: 0; stroke-linecap: round; stroke-linejoin: round; }
+.task input:checked + .box { background: var(--c); animation: pop .3s; }
+.task input:checked + .box svg { opacity: 1; }
+.task input:focus-visible + .box { outline: 4px solid var(--ink); outline-offset: 3px; }
+@keyframes pop { 50% { transform: scale(1.18); } }
+.cat { font-weight: 800; font-size: .78em; letter-spacing: .08em; text-transform: uppercase; color: var(--c); display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.cat .min { color: var(--muted); letter-spacing: 0; text-transform: none; font-weight: 700; }
+.task h3 { font-size: 1.4em; margin: 4px 0 4px; }
+.task p { margin: 0; max-width: 65ch; font-size: 1.08em; font-weight: 600; }
+.task .note { color: var(--muted); font-size: .85em; margin-top: 6px; font-weight: 600; }
+.task.done { background: var(--surface); border-color: var(--c); }
+.task.done p, .task.done h3 { color: var(--muted); }
+.task.done .ico { opacity: .6; }
+.t-emo { --c: var(--emo); --cbg: var(--emo-bg); }
+.t-sit { --c: var(--sit); --cbg: var(--sit-bg); }
+.t-dych { --c: var(--dych); --cbg: var(--dych-bg); }
+.t-rytmus { --c: var(--rytmus); --cbg: var(--rytmus-bg); }
+.t-fakt { --c: var(--fakt); --cbg: var(--fakt-bg); }
+.board .task label { padding: 24px 28px; }
+
+.finish { background: var(--dych-bg); border: 3px solid var(--dych); border-radius: 28px; padding: 18px 22px; font-weight: 700; }
+.finish b { font-family: var(--font-display); font-size: 1.4em; display: block; color: var(--dych); }
+
+details { background: var(--surface); border: 2px solid var(--line); border-radius: 22px; padding: 4px 20px; }
+summary { cursor: pointer; font-family: var(--font-display); font-weight: 600; font-size: 1.1em; padding: 12px 0; }
+details .inner { padding: 0 0 16px; max-width: 70ch; }
+details ol, details ul { margin: 6px 0 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }
+details h4 { margin: 14px 0 4px; font-family: var(--font-display); font-weight: 600; }
+.src { color: var(--muted); font-size: .85em; margin-top: 12px; }
+
+/* registrácia */
+.reg { background: var(--surface); border: 3px solid var(--accent); border-radius: 32px; padding: 26px; display: flex; flex-direction: column; gap: 18px; max-width: 560px; margin: 0 auto; }
+.reg h1 { font-size: clamp(1.7rem, 5vw, 2.3rem); }
+.reg p { margin: 0; color: var(--muted); font-weight: 600; }
+.reg fieldset { border: 0; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.reg legend, .reg .lab { font-weight: 800; padding: 0; margin-bottom: 4px; display: block; }
+.choice { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.choice label { border: 3px solid var(--line); border-radius: 20px; padding: 16px 10px; text-align: center; font-weight: 800; cursor: pointer; display: block; }
+.choice input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.choice label:has(input:checked) { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
+.choice label:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 3px; }
+.reg select, .reg input[type=text] { font: inherit; width: 100%; padding: 12px 14px; border-radius: 16px; border: 2px solid var(--line); background: var(--bg); color: var(--ink); }
+.reg .go { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 999px; padding: 15px; font-weight: 800; font-size: 1.05em; box-shadow: 0 5px 0 color-mix(in srgb, var(--accent) 60%, #000); }
+.reg .cancel { background: none; border: 0; text-decoration: underline; color: var(--muted); }
+
+/* mesačný prehľad */
+.mgrid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.mgrid .mh { text-align: center; font-weight: 800; color: var(--muted); font-size: .85em; }
+.mcell { background: var(--surface); border: 2px solid var(--line); border-radius: 18px; min-height: 76px; padding: 8px 10px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; text-align: left; }
+.mcell .dnum { font-weight: 800; font-size: .85em; color: var(--muted); }
+.mcell .mst { font-family: var(--font-display); font-weight: 600; font-size: 1.4em; align-self: flex-end; }
+.mcell.full { background: var(--dych-bg); border-color: var(--dych); }
+.mcell.full .mst { color: var(--dych); }
+.mcell.part { background: var(--rytmus-bg); border-color: var(--rytmus); }
+.mcell.part .mst { color: var(--rytmus); }
+.mcell.miss { background: var(--emo-bg); border-color: color-mix(in srgb, var(--emo) 45%, var(--line)); }
+.mcell.miss .mst { color: var(--emo); }
+.mcell.today { box-shadow: 0 0 0 3px var(--accent); }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-weight: 700; font-size: .9em; color: var(--muted); }
+.legend b { color: var(--ink); }
+
+.week { display: flex; flex-direction: column; gap: 6px; }
+.week .wrow { display: grid; grid-template-columns: minmax(62px, auto) repeat(5, minmax(0, 1fr)) 48px; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 18px; text-align: left; }
+.week .whead { padding-block: 0; border: 0; background: none; }
+.wic { width: 34px; height: 34px; border-radius: 50%; background: var(--c); display: grid; place-items: center; justify-self: center; }
+.wic svg { width: 20px; height: 20px; stroke: var(--surface); }
+.pt { width: 32px; height: 32px; border-radius: 50%; border: 3px solid var(--line); display: grid; place-items: center; justify-self: center; background: var(--surface); }
+.pt svg { width: 18px; height: 18px; fill: none; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+.pt.on { background: var(--c); border-color: var(--c); }
+.pt.on svg { stroke: var(--surface); }
+.pt.miss { border-color: var(--emo); }
+.pt.miss svg { stroke: var(--emo); }
+.wday { font-weight: 800; white-space: nowrap; }
+.wday b { color: var(--muted); margin-right: 5px; }
+.wtot { font-weight: 800; color: var(--muted); text-align: right; font-size: .85em; }
+.wsum { font-weight: 800; color: var(--muted); font-size: .9em; text-align: right; padding-right: 6px; }
+.board .pt { width: 40px; height: 40px; }
+.board .pt svg { width: 22px; height: 22px; }
+.board .wic { width: 42px; height: 42px; }
+.av { width: 5em; height: 5em; flex: none; display: block; }
+.guide { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 3px solid var(--accent); border-radius: 32px; padding: 10px 22px 10px 14px; }
+.guide .pair { display: flex; flex: none; }
+.guide .pair .av { width: 4.6em; height: 4.6em; }
+.guide .pair .av + .av { margin-left: -.9em; }
+.gtext { min-width: 0; }
+.gtext .who { font-weight: 800; font-size: .78em; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.gtext p { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 1.25em; line-height: 1.25; }
+.says { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.says .av { width: 2.6em; height: 2.6em; }
+.says > span { font-weight: 700; font-size: .88em; color: var(--muted); }
+.fav { display: flex; flex: none; }
+.fav .av { width: 4em; height: 4em; }
+.fav .av + .av { margin-left: -.7em; }
+.finish { display: flex; align-items: center; gap: 16px; }
+.reg .intro { display: flex; align-items: center; gap: 12px; }
+.reg .intro p { color: var(--ink); }
+.reward { background: var(--surface); border: 3px solid var(--star-line); border-radius: 26px; padding: 14px 20px; display: flex; flex-direction: column; gap: 8px; }
+.rtop { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-weight: 800; }
+.rpts { font-family: var(--font-display); font-size: 2em; color: var(--rytmus); line-height: 1; }
+.rbar { height: 14px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.rbar span { display: block; height: 100%; background: var(--star); border-radius: 99px; }
+.rlvl { font-weight: 700; color: var(--muted); font-size: .9em; }
+.rlvl b { color: var(--ink); }
+@media (max-width: 560px) {
+  .task label { padding: 14px; gap: 12px; grid-template-columns: auto minmax(0, 1fr); }
+  .box { order: 4; grid-column: 2; justify-self: end; margin-top: -4px; width: 46px; height: 46px; }
+  .ico { width: 52px; height: 52px; }
+  .ico svg { width: 30px; height: 30px; }
+  .dbadge { width: 70px; }
+  .fact { grid-template-columns: minmax(0, 1fr); }
+  .star { width: 32px; height: 32px; }
+  .guide .pair .av { width: 3.6em; height: 3.6em; }
+  .guide { padding-right: 14px; }
+  .week .wrow { padding: 6px 8px; gap: 4px; grid-template-columns: minmax(50px, auto) repeat(5, minmax(0, 1fr)) 38px; }
+  .wic { width: 28px; height: 28px; } .wic svg { width: 16px; height: 16px; }
+  .pt { width: 28px; height: 28px; border-width: 2px; } .pt svg { width: 15px; height: 15px; }
+}
+@media (prefers-reduced-motion: reduce) { .star, .task, .task input:checked + .box { transition: none; animation: none; } }
+</style>
+
+<div class="wrap" id="app"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- úložisko (len v tomto prehliadači) ---------- */
+  var mem = {};
+  function load(k, fb) {
+    try { var v = localStorage.getItem(k); if (v) return JSON.parse(v); } catch (e) {}
+    return mem[k] !== undefined ? mem[k] : fb;
+  }
+  function save(k, v) {
+    mem[k] = v;
+    try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
+  }
+
+  var settings = load("rk.settings", null);
+  var done = load("rk.done", {});
+  var editingReg = false;
+  var big = load("rk.big", false);
+  var view = "day", board = false, monthRef = null, wake = null, wakeWanted = false, hint = "";
+  var MONTHS_SHORT = ["JAN","FEB","MAR","APR","MÁJ","JÚN","JÚL","AUG","SEP","OKT","NOV","DEC"];
+  function ico(inner) { return '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>'; }
+  var ICONS = {
+    emo: ico('<circle cx="12" cy="12" r="9"/><path d="M8 14.2c1 1.6 2.4 2.4 4 2.4s3-.8 4-2.4"/><path d="M9 9.5h.01M15 9.5h.01" stroke-width="3"/>'),
+    sit: ico('<path d="M3.5 6.5a2.5 2.5 0 0 1 2.5-2.5h7a2.5 2.5 0 0 1 2.5 2.5v4a2.5 2.5 0 0 1-2.5 2.5H9l-3.5 3v-3A2.5 2.5 0 0 1 3.5 10.5z"/><path d="M18 9.5h.5a2.5 2.5 0 0 1 2.5 2.5v4a2.5 2.5 0 0 1-2.5 2.5V21l-3-2.5h-4a2.5 2.5 0 0 1-2.2-1.3"/>'),
+    dych: ico('<path d="M3 9h10.5a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 13h15a2.5 2.5 0 1 1-2.5 2.5"/><path d="M3 17h7"/>'),
+    rytmus: ico('<path d="M9 17.5V6l10-2v11.5"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="15.5" r="2.5"/>'),
+    fakt: ico('<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.9 10.5c.7.7 1 1.4 1 2.5h5.8c0-1.1.3-1.8 1-2.5A6 6 0 0 0 12 3z"/>')
+  };
+  var STAR = '<svg class="star%C%" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z"/></svg>';
+  var SUN = '<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="8" fill="var(--star)" stroke="var(--star-line)" stroke-width="2"/><g stroke="var(--star-line)" stroke-width="3" stroke-linecap="round"><path d="M20 4v4M20 32v4M4 20h4M32 20h4M8.7 8.7l2.8 2.8M28.5 28.5l2.8 2.8M31.3 8.7l-2.8 2.8M11.5 28.5l-2.8 2.8"/></g></svg>';
+  /* Dora a Doro: vlastné postavičky, ktoré sprevádzajú deti aplikáciou */
+  function gname(w) { return w === "dora" ? "Dora" : (w === "doro" ? "Doro" : "Srnka"); }
+  function deer(mood) {
+    var fur = "#B97A4B", inner = "#F2B8A0", muz = "#F6E3CF", ink = "#2B2340", nose = "#3A2A2A";
+    var o = '<svg class="av" viewBox="0 0 100 100" aria-hidden="true">';
+    o += '<ellipse cx="21" cy="31" rx="9" ry="17" transform="rotate(-32 21 31)" fill="' + fur + '"/><ellipse cx="22" cy="32" rx="4.6" ry="11" transform="rotate(-32 22 32)" fill="' + inner + '"/>';
+    o += '<ellipse cx="79" cy="31" rx="9" ry="17" transform="rotate(32 79 31)" fill="' + fur + '"/><ellipse cx="78" cy="32" rx="4.6" ry="11" transform="rotate(32 78 32)" fill="' + inner + '"/>';
+    o += '<path d="M28 100C28 82 37 73 50 73s22 9 22 27z" fill="' + fur + '"/>';
+    o += '<circle cx="40" cy="91" r="2.2" fill="#fff" opacity=".85"/><circle cx="59" cy="93" r="2.2" fill="#fff" opacity=".85"/><circle cx="50" cy="97" r="2" fill="#fff" opacity=".85"/>';
+    o += '<path d="M32 75Q50 87 68 75L71 83Q50 95 29 83z" fill="#19A3A0"/>';
+    o += '<ellipse cx="50" cy="50" rx="24" ry="26" fill="' + fur + '"/>';
+    o += '<ellipse cx="50" cy="63" rx="13.5" ry="11" fill="' + muz + '"/>';
+    o += '<ellipse cx="50" cy="57" rx="5.2" ry="3.7" fill="' + nose + '"/>';
+    o += '<circle cx="34" cy="57" r="4" fill="#F2808F" opacity=".4"/><circle cx="66" cy="57" r="4" fill="#F2808F" opacity=".4"/>';
+    if (mood === "cheer") o += '<path d="M35 46q5-6 10 0M55 46q5-6 10 0" fill="none" stroke="' + ink + '" stroke-width="2.6" stroke-linecap="round"/>';
+    else o += '<circle cx="40" cy="45" r="3.6" fill="' + ink + '"/><circle cx="60" cy="45" r="3.6" fill="' + ink + '"/><circle cx="41.2" cy="43.8" r="1.1" fill="#fff"/><circle cx="61.2" cy="43.8" r="1.1" fill="#fff"/>';
+    o += '<path d="M50 61v3" stroke="' + nose + '" stroke-width="2" stroke-linecap="round"/>';
+    if (mood === "open" || mood === "cheer") o += '<path d="M44 65q6 9 12 0z" fill="#7A2E3A"/>';
+    else if (mood === "ooh") o += '<circle cx="50" cy="67" r="2.6" fill="#7A2E3A"/>';
+    else o += '<path d="M44 65q6 5 12 0" fill="none" stroke="#7A2E3A" stroke-width="2.4" stroke-linecap="round"/>';
+    return o + '</svg>';
+  }
+  function sayer(c) { return settings && settings.type === "ms" ? "srnka" : SAYS[c][0]; }
+  function pairFace(m) { return settings && settings.type === "ms" ? deer(m) : face("dora", m) + face("doro", m); }
+  function introHtml(t) {
+    return '<div class="fav">' + (t === "ms" ? deer("open") : face("dora", "open") + face("doro", "open")) + '</div>' +
+      '<p><b>' + (t === "ms" ? "Ahoj, som srnka!" : "Ahoj, sme Dora a Doro!") + '</b> ' + (t === "ms" ? "Budem" : "Budeme") + ' vás sprevádzať ranným kruhom každý deň.</p>';
+  }
+  function face(who, mood) {
+    if (who === "srnka") return deer(mood);
+    var d = who === "dora";
+    var skin = d ? "#F0C09A" : "#E2A97F", hair = d ? "#4A2C1D" : "#B4532A", ink = "#2B2340";
+    var o = '<svg class="av" viewBox="0 0 100 100" aria-hidden="true">';
+    if (d) o += '<circle cx="25" cy="27" r="12" fill="' + hair + '"/><circle cx="75" cy="27" r="12" fill="' + hair + '"/>';
+    o += '<path d="M16 100C16 80 31 73 50 73s34 7 34 27z" fill="' + (d ? "#19A3A0" : "#4B3FD0") + '"/>';
+    o += d ? '<path d="M50 83l2.2 4.6 5 .6-3.7 3.4 1 5-4.5-2.5-4.5 2.5 1-5-3.7-3.4 5-.6z" fill="#FFC21A"/>'
+           : '<path d="M44 78v11M56 78v11" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>';
+    o += '<rect x="43" y="64" width="14" height="14" rx="5" fill="' + skin + '"/>';
+    o += '<circle cx="24" cy="52" r="5" fill="' + skin + '"/><circle cx="76" cy="52" r="5" fill="' + skin + '"/>';
+    o += '<circle cx="50" cy="48" r="26" fill="' + skin + '"/>';
+    o += '<path d="M24 46C22 20 78 20 76 46C71 36 60 31 49 31C38 31 29 36 24 46z" fill="' + hair + '"/>';
+    o += d ? '<circle cx="31" cy="34" r="3.6" fill="#19A3A0"/><circle cx="69" cy="34" r="3.6" fill="#19A3A0"/>'
+           : '<path d="M41 27C41 13 59 13 59 27C54 22 46 22 41 27z" fill="' + hair + '"/>';
+    o += '<circle cx="37" cy="57" r="4.2" fill="#F2808F" opacity=".45"/><circle cx="63" cy="57" r="4.2" fill="#F2808F" opacity=".45"/>';
+    if (mood === "cheer") o += '<path d="M36 47q5-6 10 0M54 47q5-6 10 0" fill="none" stroke="' + ink + '" stroke-width="2.6" stroke-linecap="round"/>';
+    else o += '<circle cx="41" cy="46" r="3" fill="' + ink + '"/><circle cx="59" cy="46" r="3" fill="' + ink + '"/>';
+    if (mood === "open" || mood === "cheer") o += '<path d="M41 56q9 13 18 0z" fill="#7A2E3A"/>';
+    else if (mood === "ooh") o += '<circle cx="50" cy="60" r="3.4" fill="#7A2E3A"/>';
+    else o += '<path d="M42 57q8 8 16 0" fill="none" stroke="#7A2E3A" stroke-width="2.6" stroke-linecap="round"/>';
+    return o + '</svg>';
+  }
+  var SAYS = {
+    emo: ["dora", "smile", "Každá emócia je v poriadku. Počúvame sa navzájom."],
+    sit: ["doro", "smile", "Spolu vymyslíme, čo môžeme urobiť."],
+    dych: ["dora", "ooh", "Dýchame pomaly spolu s tebou."],
+    rytmus: ["doro", "open", "Tlieskajme, dupkajme a hrajme sa s rytmom!"],
+    fakt: ["dora", "open", "Zaujímavé! Čo si o tom myslíš ty?"]
+  };
+  function guideMsg(count, special, title) {
+    if (count === 5) return ["doro", "cheer", "Hurá, zvládli ste všetkých päť úloh! Ste skvelí."];
+    if (count >= 3) return ["dora", "open", count === 4 ? "Skoro hotovo, ešte jedna úloha!" : "Ide vám to skvele, ešte dve úlohy!"];
+    if (count >= 1) return ["doro", "open", "Super, už máte " + count + " z 5! Pokračujeme."];
+    return special ? ["doro", "open", "Dnes je výnimočný deň: " + title + ". Pozrite sa na to s nami!"]
+                   : ["dora", "smile", "Dobré ráno! Som Dora, toto je Doro a dnes vás ranným kruhom prevedieme spolu."];
+  }
+  var MONTHS_NOM = ["Január","Február","Marec","Apríl","Máj","Jún","Júl","August","September","Október","November","December"];
+
+  /* ---------- dátumy ---------- */
+  var DAYS = ["Nedeľa", "Pondelok", "Utorok", "Streda", "Štvrtok", "Piatok", "Sobota"];
+  var DAYS_SHORT = ["Po", "Ut", "St", "Št", "Pi"];
+  var MONTHS = ["januára","februára","marca","apríla","mája","júna","júla","augusta","septembra","októbra","novembra","decembra"];
+  function atNoon(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12); }
+  function addDays(d, n) { var x = atNoon(d); x.setDate(x.getDate() + n); return x; }
+  function isWeekend(d) { var w = d.getDay(); return w === 0 || w === 6; }
+  function workday(d, dir) { var x = addDays(d, dir); while (isWeekend(x)) x = addDays(x, dir); return x; }
+  function monday(d) { return addDays(d, -((d.getDay() + 6) % 7)); }
+  function key(d) { return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+  function md(d) { return (d.getMonth() + 1) + "-" + d.getDate(); }
+  function wdNum(d) {
+    var n = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000) + 3;
+    return Math.floor(n / 7) * 5 + Math.min(n % 7, 4);
+  }
+  var today = atNoon(new Date());
+  var cur = isWeekend(today) ? workday(today, 1) : today;
+  var startedOnWeekend = isWeekend(today);
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; });
+  }
+
+  /* ---------- obsah: zaujímavosti dňa ---------- */
+  var SPECIAL = {
+    "1-4": ["Deň Braillovho písma", "4. januára 1809 sa narodil Louis Braille. Ako dieťa prišiel o zrak a vymyslel písmo z vypuklých bodiek, ktoré nevidiaci čítajú prstami.", "Zavri oči a skús rukou spoznať predmet, ktorý ti podáme. Čo si všimol/a?"],
+    "1-11": ["Medzinárodný deň ďakujem", "Slovo ďakujem poteší toho, kto ho počuje, aj toho, kto ho povie.", "Komu by si dnes chcel/a poďakovať a za čo?"],
+    "1-21": ["Deň objatia", "Objatie je neoficiálny sviatok, ktorý pripomína, že blízkosť a pozornosť nás upokojujú. Objímať sa môžeme len vtedy, keď to chcú obaja.", "Ako môžeme niekomu ukázať, že ho máme radi, aj bez objatia?"],
+    "2-2": ["Svetový deň mokradí", "Mokrade sú močiare, rašeliniská a lúky pri vode. Sú domovom vtákov, žiab a rýb a zachytávajú vodu ako huba.", "Ktoré zvieratá bývajú pri vode?"],
+    "2-13": ["Svetový deň rádia", "Rádio nám prináša správy, hudbu a rozprávky len cez zvuk, bez obrazu.", "Čo by sme v rádiu radi počúvali? Vymysli názov relácie."],
+    "2-14": ["Deň priateľstva a lásky (Valentín)", "Na Valentína si ľudia v mnohých krajinách dávajú malé darčeky a kartičky.", "Čo pekné môžeme dnes urobiť pre kamaráta?"],
+    "2-21": ["Medzinárodný deň materinského jazyka", "Na svete sa hovorí asi sedemtisíc jazykmi. Každý z nich je jedinečný.", "Vieš povedať dobrý deň v inom jazyku? Naučíme sa jedno nové slovo."],
+    "3-3": ["Svetový deň divokej prírody", "Divoké zvieratá a rastliny potrebujú svoj domov: les, lúku, rieku. Chrániť ich môžeme aj my.", "Ktoré divoké zviera by si chcel/a pozorovať a prečo?"],
+    "3-14": ["Deň čísla π a Albert Einstein", "14. marca (3,14) oslavujeme číslo π. V tento deň sa v roku 1879 narodil aj fyzik Albert Einstein.", "Kde okolo nás nájdeme kruh? Spočítaj tri kruhy v miestnosti."],
+    "3-20": ["Medzinárodný deň šťastia", "OSN vyhlásila deň šťastia. Radosť často nájdeme v malých veciach.", "Čo ti robí radosť a stojí to len pár minút?"],
+    "3-21": ["Svetový deň poézie a Medzinárodný deň lesov", "Básne hrajú so slovami ako s hudbou. Lesy sú pľúca krajiny, čistia vzduch a dávajú domov tisíckam živočíchov.", "Vymyslíme spolu dvojveršie o strome (aj keď sa nerýmuje)."],
+    "3-22": ["Svetový deň vody", "Voda tvorí väčšinu nášho tela. Bez vody by sme nevydržali ani pár dní.", "Na čo všetko dnes potrebuješ vodu? Ako ju vieme šetriť?"],
+    "3-23": ["Svetový meteorologický deň", "Meteorológovia merajú teplotu, vietor a zrážky a podľa toho predpovedajú počasie.", "Aké je dnes počasie? Zahraj ho tlieskaním (dážď, vietor, búrka)."],
+    "4-2": ["Medzinárodný deň detskej knihy", "2. apríla 1805 sa narodil dánsky rozprávkar Hans Christian Andersen, autor Malej morskej víly a Škaredého káčatka.", "Aká je tvoja obľúbená kniha alebo rozprávka?"],
+    "4-7": ["Svetový deň zdravia", "Zdravie nám pomáha udržať pohyb, spánok, pitie vody a pestrá strava.", "Čo robíš pre svoje zdravie každý deň?"],
+    "4-12": ["Prvý človek vo vesmíre", "12. apríla 1961 vyletel Jurij Gagarin ako prvý človek do vesmíru a obletel Zem za necelé dve hodiny.", "Čo by si chcel/a vidieť z vesmíru?"],
+    "4-22": ["Deň Zeme", "Deň Zeme pripomína, že máme len jednu planétu a staráme sa o ňu spolu.", "Čo môžeme urobiť pre Zem už dnes (triedenie, šetrenie vodou, zdvihnúť odpadok)?"],
+    "4-23": ["Svetový deň knihy", "Kniha vie byť malá ako dlaň aj veľká ako stôl. V knihách je ukrytých veľa príbehov a vedomostí.", "Ak by si písal/a vlastnú knihu, o čom by bola?"],
+    "4-29": ["Narodil sa Karl Drais, vynálezca predchodcu bicykla", "29. apríla 1785 sa narodil Karl Drais. Vymyslel dvojkolesový bežecký stroj bez pedálov, z ktorého sa vyvinul bicykel. Dnes je aj Medzinárodný deň tanca.", "Ako sa pohybuješ do školy? Predveď pohyb bicyklom len rukami."],
+    "5-15": ["Medzinárodný deň rodiny", "Rodiny môžu byť veľké alebo malé a každá je iná. Spája ich to, že sa majú rady a starajú sa o seba.", "Čo rád/rada robíš s ľuďmi, ktorých máš doma?"],
+    "5-20": ["Svetový deň včiel", "Včely opeľujú kvety, vďaka nim vznikajú ovocie aj zelenina. Ich tanec povie ostatným včelám, kde je kvetinová lúka.", "Predveď včelí tanec a ostatní uhádnu, kam letíš."],
+    "5-22": ["Medzinárodný deň biodiverzity", "Biodiverzita je rozmanitosť života: rastliny, zvieratá, huby aj drobné živočíchy.", "Koľko rôznych živých vecí vidíš pri ceste do školy?"],
+    "6-1": ["Medzinárodný deň detí", "Deti majú svoje práva: hrať sa, učiť sa, mať domov a byť v bezpečí.", "Čo by si chcel/a, aby dospelí o deťoch vedeli?"],
+    "6-3": ["Svetový deň bicykla", "OSN vyhlásila 3. jún za Svetový deň bicykla. Bicykel nepotrebuje benzín, pohon je naša sila.", "Kam by si sa rád/rada previezol/a na bicykli?"],
+    "6-5": ["Svetový deň životného prostredia", "Životné prostredie je všetko, čo nás obklopuje: vzduch, voda, pôda, rastliny aj zvieratá.", "Čo nás v škole alebo v škôlke môže pomôcť chrániť prírodu?"],
+    "6-8": ["Svetový deň oceánov", "Oceány pokrývajú väčšinu povrchu Zeme a žijú v nich tie najväčšie aj najmenšie živočíchy.", "Ktoré morské zviera je tvoj favorit? Ukáž ho pohybom."],
+    "6-21": ["Deň hudby", "21. júna sa v mnohých mestách oslavuje hudba. Znie na uliciach, v parkoch aj na námestiach.", "Aký nástroj by si chcel/a vyskúšať?"],
+    "7-20": ["Pristátie na Mesiaci", "20. júla 1969 pristála na Mesiaci prvá ľudská posádka misie Apollo 11.", "Čo by si si vzal/a so sebou na Mesiac?"],
+    "8-19": ["Svetový deň fotografie", "Fotografia zachytí okamih. Prvé fotografie vznikali pri expozícii, ktorá trvala veľmi dlho.", "Ktorý moment dnešného rána by si chcel/a odfotiť?"],
+    "9-21": ["Medzinárodný deň mieru", "Mier znamená, že sa vieme dohodnúť bez násilia. Začína v malých veciach: v triede, doma, v hre.", "Čo robíme, keď sa chceme dohodnúť pokojne?"],
+    "9-22": ["Svetový deň bez áut", "V tento deň mnohé mestá obmedzia autá a ľudia chodia pešo, na bicykli alebo hromadnou dopravou.", "Ako sa dá dostať do školy bez auta?"],
+    "9-26": ["Európsky deň jazykov", "V Európe sa hovorí množstvom jazykov. Slovenčina patrí medzi slovanské jazyky.", "Poznáš niekoho, kto vie hovoriť dvoma jazykmi?"],
+    "10-1": ["Medzinárodný deň starších ľudí", "Starí rodičia a starší ľudia majú veľa skúseností a príbehov.", "Čo ťa naučil niekto starší, napríklad babka alebo dedko?"],
+    "10-4": ["Svetový deň zvierat", "Zvieratá sú naši susedia na planéte. Domáce aj voľne žijúce potrebujú starostlivosť a rešpekt.", "Ako sa správame k zvieratám? Ako sa správa dobrý kamarát zvierat?"],
+    "10-5": ["Svetový deň učiteľov", "Učitelia pomáhajú deťom objavovať svet, učiť sa a rásť.", "Čo by si chcel/a poďakovať učiteľke alebo učiteľovi?"],
+    "10-9": ["Svetový deň pošty", "Pošta doručuje listy a balíky po celom svete. Kedysi bol list jediný spôsob, ako poslať správu ďaleko.", "Komu by si napísal/a pozdrav?"],
+    "10-15": ["Svetový deň umývania rúk", "Dobre umyté ruky nás chránia pred chorobami. Umývame ich aspoň dvadsať sekúnd.", "Zaspievame si pesničku, kým si umývame ruky. Koľko trvá?"],
+    "10-16": ["Svetový deň chleba", "Chlieb sa pečie už tisícky rokov. Vzniká z múky, vody a kvasu alebo droždia.", "Aký chlieb máš rád/rada a čo si naň natieraš?"],
+    "10-20": ["Deň stromov", "Na Slovensku sa 20. októbra pripomína Deň stromov. Stromy dávajú kyslík, tieň a domov vtákom aj hmyzu.", "Ktorý strom poznáš? Povedz, aké má listy alebo plody."],
+    "10-24": ["Deň OSN", "Organizácia Spojených národov vznikla v roku 1945, aby krajiny spolupracovali a predchádzali vojnám.", "Prečo je dobré, že sa ľudia z rôznych krajín spolu rozprávajú?"],
+    "11-13": ["Svetový deň láskavosti", "Láskavosť je malý skutok, ktorý poteší druhého: úsmev, pomoc, milé slovo.", "Akú láskavú vec urobíš dnes?"],
+    "11-16": ["Medzinárodný deň tolerancie", "Tolerancia znamená, že rešpektujeme, že sme každý iný: máme iné názory, zvyky aj schopnosti.", "V čom sme my dvaja iní a v čom sme rovnakí?"],
+    "11-17": ["Deň boja za slobodu a demokraciu", "17. novembra si na Slovensku pripomíname udalosti z roku 1939 a 1989 a hodnotu slobody a demokracie.", "Čo pre teba znamená byť slobodný/á a čo musíme dodržiavať, aby sa nám dobre žilo spolu?"],
+    "11-20": ["Svetový deň detí", "Deti na celom svete majú rovnaké práva: na domov, vzdelanie, bezpečie aj hru.", "Ktoré právo je pre teba najdôležitejšie?"],
+    "11-21": ["Svetový deň pozdravov", "Pozdraviť sa môžeme slovom, úsmevom, kývnutím, mávnutím či podaním ruky. V každej krajine sa pozdravy trochu líšia.", "Vymyslíme trojsekundový pozdrav, ktorý nikoho nezaťaží (napr. mávnutie)."],
+    "12-3": ["Medzinárodný deň osôb so zdravotným postihnutím", "Každý z nás niečo vie a niečo potrebuje. Keď si navzájom pomáhame, funguje to lepšie pre všetkých.", "V čom je dobré, že sa navzájom dopĺňame?"],
+    "12-6": ["Mikuláš", "6. decembra sa pripomína svätý Mikuláš, ktorý bol známy tým, že rád pomáhal chudobným.", "Ako môžeme pomôcť niekomu, kto potrebuje?"],
+    "12-10": ["Deň ľudských práv", "Ľudské práva patria všetkým rovnako, bez ohľadu na to, kto sme a odkiaľ pochádzame.", "Ktoré právo by si pridal/a do zoznamu pre našu triedu?"],
+    "12-11": ["Medzinárodný deň hôr", "Hory sú domov pre zvieratá, zdroj čistej vody a miesto na oddych. Najvyšší vrch Slovenska je Gerlachovský štít (2 655 m).", "Čo by si si zbalil/a na výlet do hôr?"],
+    "12-24": ["Štedrý deň", "Štedrý deň je pre mnohé rodiny časom spolu: zdobí sa stromček, varí sa a rozdávajú sa darčeky.", "Čo pekné môžeme dať niekomu bez toho, aby to stálo peniaze (čas, objatie, pomoc)?"]
+  };
+  SPECIAL["10-16"][2] = "Aký chlieb máš rád/rada a čo si naň natieraš?";
+
+  var GENERAL = [
+    ["Chobotnica má tri srdcia", "Dve srdcia pumpujú krv do žiabier a tretie do zvyšku tela.", "Koľko rúk má chobotnica? Ukáž ich pohybom."],
+    ["Včely tancujú", "Včela tancom povie ostatným, ktorým smerom a ako ďaleko je kvetinová lúka.", "Skús bez slov ukázať kamarátovi, kde je dvere."],
+    ["Žirafa a človek majú rovnaký počet krčných stavcov", "Žirafa aj človek majú v krku sedem stavcov. Žirafie sú iba oveľa dlhšie.", "Ukáž, ako by sa pohyboval/a niekto s veľmi dlhým krkom."],
+    ["Stromy vyrábajú kyslík", "Listy vdychujú oxid uhličitý a pri raste uvoľňujú kyslík, ktorý dýchame.", "Zhlboka sa nadýchneme a poďakujeme stromom."],
+    ["Mravce sú silné", "Mravec dokáže uniesť predmet, ktorý je mnohonásobne ťažší ako on sám.", "Čo by si chcel/a uniesť, keby si bol/a mravec?"],
+    ["Ako vzniká dúha", "Dúha vzniká, keď sa slnečné svetlo láme v kvapkách vody. Vidíme sedem farieb.", "Vymenuj farby dúhy. Ktorú vidíš práve v miestnosti?"],
+    ["Mesiac sa vzďaľuje", "Mesiac sa od Zeme vzďaľuje asi o štyri centimetre za rok, približne tak rýchlo, ako rastú nechty.", "Čo vieš o Mesiaci? Ako vyzerá dnes večer?"],
+    ["Srdce tlčie stále", "Srdce dospelého človeka udrie približne stotisíckrát za deň.", "Polož si ruku na hruď. Cítiš, ako ti bije srdce? Skúsime sa zahýbať a znova skontrolovať."],
+    ["Slovensko a jeho susedia", "Slovensko má päť susedov: Česko, Poľsko, Ukrajinu, Maďarsko a Rakúsko.", "Vieš pomenovať aspoň jednu krajinu, ktorá s nami susedí?"],
+    ["Najvyšší vrch Slovenska", "Gerlachovský štít vo Vysokých Tatrách je vysoký 2 655 metrov.", "Aký vrch alebo kopec poznáš ty?"],
+    ["Najdlhšia slovenská rieka", "Váh je najdlhšia rieka na Slovensku, má 403 kilometrov.", "Akú rieku alebo potok vieš nájsť blízko nás?"],
+    ["Slnko je hviezda", "Slnko je hviezda, ktorá nám dáva svetlo a teplo. Zdá sa nám väčšie ako ostatné hviezdy, lebo je najbližšie.", "Ako sa cítiš, keď sa na teba usmeje slnko?"],
+    ["Snehová vločka má šesť ramien", "Každá snehová vločka má šesť ramien a väčšinou vyzerá inak ako ostatné.", "Nakresli prstom vo vzduchu vločku so šiestimi lúčmi."],
+    ["Delfíny spia inak", "Delfín pri spánku odpočíva len jednou polovicou mozgu, aby mohol dýchať.", "Ako spíš ty? Ktorú polohu máš najradšej?"],
+    ["Kolibrík lieta dozadu", "Kolibrík dokáže visieť vo vzduchu a lietať dopredu, dozadu aj nabok.", "Predveď, ako by sa pohyboval kolibrík."],
+    ["Dospelý človek má 206 kostí", "Dieťa sa rodí s viac ako tristo kosťami, ktoré počas rastu čiastočne zrastú.", "Ktoré kosti na sebe vieš nájsť? Ukáž lakeť a členok."],
+    ["Ježko spí zimný spánok", "Ježko prespí studené mesiace, srdce mu tlčie pomalšie a telo šetrí energiu.", "Čo robia iné zvieratá v zime?"],
+    ["Slová pomáhajú aj upokojiť", "Keď pomenujeme, čo cítime, emócia býva menej silná. Preto je dobré mať pre pocity slová.", "Poznáš dnes nejaké nové slovo pre pocit (napr. natešený, napätý, vďačný)?"]
+  ];
+
+  /* ---------- obsah: úlohy podľa veku ---------- */
+  var EMO = {
+    ms: [
+      "Ako sa cítiš dnes ráno? Ukáž prstom: usmiate slnko, mrak alebo dážď.",
+      "Ukáž tvárou, ako vyzerá radosť. Teraz smútok. A teraz prekvapenie.",
+      "Čo ťa dnes ráno potešilo? Povedz jednu vec, keď dostaneš predmet do ruky.",
+      "Akú farbu má tvoja nálada? Vyber si farbu a povedz, prečo.",
+      "Kde v tele cítiš radosť? Ukáž rukou.",
+      "Ako sa cíti medvedík, ktorému sa pokazila hračka? Ako by sme mu pomohli?",
+      "Pošleme kruhom úsmev: každý sa pozrie na suseda a usmeje sa."
+    ],
+    zs1: [
+      "Stupnica nálady 1 až 5: ukáž prstami, ako sa cítiš. Môžeš povedať prečo, ale nemusíš.",
+      "Pomenuj emóciu, ktorú dnes cítiš, jedným slovom (napr. natešený, unavený, nervózny).",
+      "Ktorú emóciu je najťažšie zvládnuť? Čo ti pomáha?",
+      "Počasie nálady: slnko, oblačno, dážď alebo búrka? Vyber si a ukáž.",
+      "Čo by ti pomohlo mať dobrý deň?",
+      "Ako spoznáš, že je niekto smutný, aj keď to nepovie? Čo si všímaš na tvári a držaní tela?",
+      "Vymenuj tri veci, za ktoré si dnes vďačný/á."
+    ],
+    zs2: [
+      "Škála 1 až 10: koľko energie máš dnes? Ukáž prstami alebo napíš na papierik.",
+      "Jedno slovo, ktoré opisuje tvoju náladu. Skús presnejšie slovo než dobre alebo zle.",
+      "Kde v tele pocítiš silnú emóciu (napätie v bruchu, rýchly tep)? Ako si ju všimneš?",
+      "Čo ti pomáha upokojiť sa, keď si pod tlakom?",
+      "Čo sa ti v poslednom čase podarilo a čo si ocenil/a na sebe?",
+      "Kto alebo čo ti pomáha mať dobrý deň? Poďakuj tomu v mysli.",
+      "Môžeme cítiť dve emócie naraz? Poznáš situáciu, keď si cítil/a radosť aj obavu?"
+    ]
+  };
+  var SIT = {
+    ms: [
+      "Kamarát ti vzal hračku. Čo môžeš urobiť? Vyskúšame pokojné slová: „Prosím, vráť mi ju.“",
+      "Niekto plače. Čo môžeme urobiť, aby sa cítil lepšie? (objať, spýtať sa, priniesť vodu)",
+      "Chceš sa pridať do hry. Ako sa spýtame? Zahráme to v dvojiciach.",
+      "Niečo ťa hnevá. Čo urobíš skôr, než udrieš? Zastav sa, nadýchni sa a povedz: „Hnevám sa.“",
+      "Pokazila sa ti stavba z kociek. Čo môžeš urobiť? Zahráme to s maňuškou.",
+      "Čakáš, kým príde rad na teba. Ako sa čaká ľahšie? (počítať, dýchať, spievať si)",
+      "Niekto ti pomohol. Ako poďakuješ? Skúsime slovom aj gestom."
+    ],
+    zs1: [
+      "Spolužiak ti nechtiac zhodil peračník. Ako zareaguješ? Porovnajme dve reakcie a to, čo sa po nich stane.",
+      "Nerozumieš zadaniu. Vymysli tri spôsoby, ako si požiadať o pomoc.",
+      "V hre vyhráš alebo prehráš. Ako sa správať k druhým po výhre aj po prehre?",
+      "Kamarát sa smeje na niekom. Čo môžeš urobiť alebo povedať?",
+      "Niekto ti povedal, čo ťa zabolelo. Ako pokojne povedať: „To sa mi nepáči“? Skús vetu: Keď…, cítim sa… a prosím…",
+      "Si nový/á v skupine a nikoho nepoznáš. Ako začať rozhovor?",
+      "Dvaja kamaráti sa pohádali. Čo môžeš urobiť a čo radšej nie?"
+    ],
+    zs2: [
+      "Kamarát ti prezradil tajomstvo a ty si ho povedal/a ďalej. Čo to spôsobí a ako to napraviť?",
+      "Vidíš, že niekoho zosmiešňujú online. Aké máš možnosti? Ktoré sú bezpečné a účinné?",
+      "Dostaneš kritiku. Ako rozlíšiť, čo ti pomôže rásť, a ako reagovať v pokoji?",
+      "Pri skupinovom projekte jeden nerobí nič. Ako to otvoriť bez obviňovania? Skús ja-výroky.",
+      "Ako povedať nie kamarátovi, ktorý chce niečo, čo sa ti nepáči, a zachovať priateľstvo?",
+      "Máš zlý deň. Ako sa vyhnúť tomu, aby si zlú náladu vybil/a na druhých?",
+      "Urobil/a si chybu a všetci to videli. Ako sa z toho poučiť?"
+    ]
+  };
+  /* dych: [názov, text]; {n} sa nahradí počtom opakovaní */
+  var DYCH = {
+    ms: [
+      ["Vôňa kvetu a sviečka", "Nadýchni sa nosom, akoby voňal kvet, a vydýchni ústami, akoby si sfúkol sviečku. Zopakujte {n}×."],
+      ["Balónik na brušku", "Ruky na brucho. Nadýchni sa a bruško sa nafúkne ako balónik, potom pomaly vydýchni a balónik sa zmenší. {n}×."],
+      ["Včielka", "Nadýchni sa a pri výdychu bzučíš „mmm“ ako včielka. {n}×."],
+      ["Had", "Nadýchni sa nosom a vydychuj dlho so syčaním „sssss“. {n}×."],
+      ["Plyšák na brušku", "Polož si plyšáka alebo ruku na brucho. Nech sa hojdá hore pri nádychu a dole pri výdychu. {n}×."],
+      ["Horúca polievka", "Nadýchni sa nosom a pomaly fúkaj na horúcu polievku, aby ostydla. {n}×."],
+      ["Vietor v lese", "Rozpaž ruky ako konáre. Nadýchni sa a pri výdychu fúkaj ako vietor, ruky sa pomaly kolíšu. {n}×."]
+    ],
+    zs1: [
+      ["Dýchanie do štvorca", "Nádych na 3, chvíľa pokoja na 3, výdych na 3. Zopakujte {n}×."],
+      ["Hviezdicové dýchanie", "Prstom jednej ruky obchádzaj prsty druhej. Pri vyjdení hore nádych, pri zostupe výdych. Postupne všetkých päť prstov."],
+      ["Dlhý výdych", "Nádych nosom na 3, výdych ústami na 5. Dlhší výdych upokojuje. {n}×."],
+      ["Včelí dych", "Nádych nosom, pri výdychu tichý bzukot „mmm“. Skús cítiť, ako sa chveje tvár. {n}×."],
+      ["Balónik na bruchu", "Ruku polož na brucho. Pri nádychu sa brucho nadvihne, pri výdychu klesne. {n}×."],
+      ["Počítanie výdychov", "Vydychuj pokojne a počítaj od 1 do 5. Ak sa stratíš, začni znova od jednotky."],
+      ["Para na okne", "Vydychuj dlho a ticho „hhh“, akoby si chcel/a zahmliť sklo. {n}×."]
+    ],
+    zs2: [
+      ["Dýchanie do štvorca", "Nádych 4, pauza 4, výdych 4, pauza 4. Zopakujte {n}×."],
+      ["Predĺžený výdych", "Nádych nosom na 4, výdych na 6. Sústreď sa na ramená, nech klesnú. {n}×."],
+      ["Dych cez telo", "Pri každom dychu si v mysli prejdi telo: nohy, brucho, ramená, tvár. Nič nemusíš meniť, len si všímaj."],
+      ["Päť pomalých dychov", "Dýchaj iba nosom. Pozoruj, ako vzduch prechádza nosom a napĺňa hruď."],
+      ["Napnúť a uvoľniť", "Pri nádychu zovri päste a napni ramená, pri výdychu všetko uvoľni. {n}×."],
+      ["Počítanie dychov", "Počítaj výdychy od 1 do 10. Keď stratíš počet, začni znova bez posudzovania."],
+      ["Výdych s uvoľnením", "Pri výdychu vydaj tichý zvuk „ha“ a nechaj ramená spadnúť. {n}×."]
+    ]
+  };
+  var RYT = {
+    ms: [
+      "Vytleskaj svoje meno po slabikách (Ma-ri-ka: tri údery). Ostatní po tebe zopakujú.",
+      "Echo: učiteľka vytlieska krátky rytmus, deti ho zopakujú.",
+      "Kolená, kolená, tlesk: pomaly tri takty, potom rýchlejšie.",
+      "Dážď: trieme dlane, ťukáme prstami do dlane, tlieskame, dupkáme a potom naspäť.",
+      "Zvieracie slabiky: pes (1 úder), mačka (2), slon (1), korytnačka (4). Každú slabiku vytlieskame.",
+      "Pomaly a rýchlo: tlieskame pomaly ako slimák, potom rýchlo ako zajac.",
+      "Nástroje z tela: vyber si zvuk (tlesk, dupot, lusk) a v kruhu pridávame jeden po druhom."
+    ],
+    zs1: [
+      "Rytmický kruh: každý pridá jeden zvuk, kruh sa opakuje.",
+      "Echo s dvoma zvukmi: tlesk a dupot. Dieťa vedie, ostatní opakujú.",
+      "Vytleskaj mená v kruhu po slabikách. Ktoré meno má najviac slabík?",
+      "Štyri doby: tlesk, tlesk, dupot, ticho. Opakujte a zrýchľujte.",
+      "Počítajte do 8 s tlieskaním, na 4 a 8 vynechajte tlesk, len ticho.",
+      "Kánon: dve skupiny, druhá začne o dve doby neskôr.",
+      "Dirigent: dieťa vedie rytmus a mení tempo, trieda ho sleduje."
+    ],
+    zs2: [
+      "Osemdobový vzor: tlesk, tlesk, lusk, plesk po stehnách, tlesk, tlesk, lusk, dupot. Zopakujte.",
+      "Kánon na štyri doby v dvoch skupinách.",
+      "Jedna polovica triedy udržiava rovnomerný pulz dupaním, druhá polovica tlieska vlastný rytmus nad ním.",
+      "Vytleskaj meno a prezývku, ostatní to zopakujú.",
+      "Reťaz rytmov: každý pridá jeden úder, bez hovorenia.",
+      "Zrkadlenie v dvojiciach bez slov: jeden vymyslí rytmus, druhý ho opakuje.",
+      "Ten istý rytmus pomaly, normálne, rýchlo a potom potichu."
+    ]
+  };
+  var THEME_TASKS = [
+    function (t) { return "Čo už o téme „" + t + "“ vieme? Každý povie jednu vec, ktorú vie alebo si myslí."; },
+    function (t) { return "Pohyb: ukáž telom, čo patrí k téme „" + t + "“."; },
+    function (t) { return "Vytleskaj slovo „" + t + "“ po slabikách a vymysli ďalšie slová, ktoré sa k téme viažu."; },
+    function (t) { return "Aké zmysly použijeme pri téme „" + t + "“? Čo by sme videli, počuli, ovoňali alebo ochutnali?"; },
+    function (t) { return "Čo nové sme sa tento týždeň o téme „" + t + "“ naučili? Čo nás najviac prekvapilo?"; }
+  ];
+
+  /* ---------- rozšírenie banky úloh ---------- */
+  function more(obj, add) { Object.keys(add).forEach(function (k) { Array.prototype.push.apply(obj[k], add[k]); }); }
+  more(EMO, {
+    ms: [
+      "Vyber si zvieratko, ktoré dnes vystihuje tvoju náladu (lenivý medveď, rýchly zajac, ospalá sova). Ukáž ho pohybom.",
+      "Ukáž rukami, aká veľká je dnes tvoja radosť: malá ako zrnko alebo veľká ako dom?",
+      "Čo robíš, keď sa cítiš smutný/á? Čo ti pomáha, keď ťa niekto objíme alebo ti niečo povie?",
+      "Povieme si, ako sa cítime, po jednom: „Dnes sa cítim…“ (stačí jedno slovo alebo obrázok z kartičiek).",
+      "Čo robí tvoje telo, keď sa nahneváš? Zovrieš päste? Ukáž to a potom ich pomaly uvoľni."
+    ],
+    zs1: [
+      "Hodnotenie energie: batéria je plná, polovičná alebo skoro prázdna? Ukáž rukou.",
+      "Vyber si zo štyroch obrázkov tváre tú, ktorá sa ti dnes najviac hodí. Nemusíš vysvetľovať.",
+      "Na čo sa dnes tešíš a z čoho máš trochu obavy?",
+      "Kedy si naposledy cítil/a hrdosť? Čo si vtedy urobil/a?",
+      "Čo sa stane s tvojou náladou, keď sa niekto na teba usmeje? Skúsime to v dvojiciach."
+    ],
+    zs2: [
+      "Emočné počasie: aká predpoveď platí dnes pre teba a čo by ju mohlo zmeniť?",
+      "Ktorá emócia ťa v poslednom týždni najviac prekvapila? Čo ťa k nej priviedlo?",
+      "Čo robíš, keď sa cítiš preťažený/á? Čo z toho funguje a čo nie?",
+      "Keď sa cítiš nervózny/á (test, vystúpenie), čo ti pomáha? Podeľ sa o jednu techniku.",
+      "Aké emócie sa objavia, keď sa niekomu darí? Ako s nimi zaobchádzať?"
+    ]
+  });
+  more(SIT, {
+    ms: [
+      "Kamarát je smutný, lebo sa mu nepodarilo nakresliť obrázok. Čo môžeme povedať alebo urobiť?",
+      "Chceš tú istú hračku ako iné dieťa. Čo môžete spraviť, aby sa v tom dalo dohodnúť?",
+      "Zablúdil/a si v obchode. Čo urobíš? (zostaneš na mieste, požiadaš o pomoc pani pri pokladni)",
+      "Niekto ti spravil radosť. Ako to môžeš ukázať? Skús slovo aj gesto.",
+      "Rozlial/a si vodu. Čo spravíš? Povieme si: „Stalo sa to, pomôžem to utrieť.“"
+    ],
+    zs1: [
+      "Niekto ťa v rade predbehol. Ako to povieš pokojne?",
+      "Zabudol/a si úlohu. Ako to povieš učiteľke a čo urobíš nabudúce?",
+      "Spolužiak sedí sám/sama pri obede. Čo môžeš urobiť?",
+      "Kamarát ťa nepozval na oslavu. Ako sa môžeš cítiť a čo môžeš urobiť?",
+      "Našiel/a si na chodbe cudziu vec. Čo s ňou urobíš?"
+    ],
+    zs2: [
+      "Priateľ ti dlhšie neodpisuje. Aké myšlienky ti prídu a čo je lepšie urobiť?",
+      "Spolužiak, ktorého nemáš rád/rada, potrebuje pomoc. Čo urobíš?",
+      "Počuješ klebetu o kamarátovi. Ako sa zachováš?",
+      "Dohodli ste sa v skupine, ale ty s plánom nesúhlasíš. Ako to povedať konštruktívne?",
+      "Niekto ťa nahnevane oslovil. Ako zareagovať, aby sa situácia nezhoršila?"
+    ]
+  });
+  more(DYCH, {
+    ms: [
+      ["Lesná prechádzka", "Predstav si, že kráčaš po lese. Pri každom kroku sa pomaly nadýchni a pri ďalšom vydýchni. Spravíme {n} krokov."],
+      ["Medvedík spí", "Ľahni si alebo sa pohodlne usaď, ruky na bruško. Nadýchni sa a pri výdychu povedz ticho „spííím“. {n}×."],
+      ["Bublina z mydla", "Nadýchni sa nosom a vydychuj pomaly, akoby si fúkal/a veľkú mydlovú bublinu. Nesmie prasknúť. {n}×."],
+      ["Motýlie krídla", "Ruky kmitajú ako krídla. Pri nádychu ich zdvihni, pri výdychu pomaly spusti dole. {n}×."],
+      ["Vôňa čokolády", "Nadýchni sa nosom a predstav si vôňu horúcej čokolády. Potom pomaly vydýchni ústami. {n}×."]
+    ],
+    zs1: [
+      ["Dýchanie s rukami", "Ruky roztiahni do strán pri nádychu, pri výdychu ich spusti. Pomaly, {n}×."],
+      ["Dýchanie 2-4", "Nádych na 2, výdych na 4. Skús, aby bol výdych rovnomerný. {n}×."],
+      ["Obrázkový dych", "Predstav si vlnu na mori. Nádych je vlna, ktorá sa dvíha, výdych vlna, ktorá odchádza. {n}×."],
+      ["Dych v pokoji", "Posaď sa pohodlne a pozoruj, ako sa ti dvíha a spúšťa brucho. Počítaj 5 dychov."],
+      ["Dych s farbou", "Pri nádychu si predstav svoju obľúbenú farbu, pri výdychu ju pošli von. {n}×."]
+    ],
+    zs2: [
+      ["Dych s ukotvením", "Nohy pevne na podlahe. Pri každom výdychu si všimni kontakt chodidiel s podlahou. {n}×."],
+      ["Dýchanie 5-5", "Nádych na 5, výdych na 5. Ak je to ťažké, skráť na 4. {n}×."],
+      ["Dych so zvukom", "Nádych nosom, výdych so zvukom „mmm“, vnímaj chvenie v hrudi. {n}×."],
+      ["Dych a pozornosť", "Zameraj sa len na dych a ak ťa odvedú myšlienky, pokojne sa vráť. Dve minúty."],
+      ["Dlhý nádych, dlhý výdych", "Nádych na 5 a výdych na 7. Vnímaj, ako sa ti spomaľuje tep. {n}×."]
+    ]
+  });
+  more(RYT, {
+    ms: [
+      "Dupkáme ako slony (pomaly) a ako myši (ticho a rýchlo). Striedame na pokyn.",
+      "Rytmus podľa počasia: ťukáme prstami ako dážď, plieskame ako vietor, dupkáme ako hrom.",
+      "Dvojice si podávajú rytmus: jeden vytlieska, druhý zopakuje, potom sa vymenia.",
+      "Poznáš nejakú riekanku? Povedzme ju spolu a tlieskajme každú slabiku.",
+      "Rytmický rad: tlesk, tlesk, dupot. Pomaly pridávame ďalší pohyb."
+    ],
+    zs1: [
+      "Rytmus podľa mena dňa: vytleskaj slovo „pon-de-lok“ (3 údery), „u-to-rok“ (3), „stre-da“ (2).",
+      "Kráčame v kruhu v rytme pulzu a pri signáli zmeníme smer.",
+      "Hra na ozvenu: učiteľka vytlieska rytmus, trieda ho zopakuje o chvíľu neskôr.",
+      "Päť sekúnd ticha a potom päť úderov. Môžeme počítať v mysli.",
+      "Rytmus s predmetmi: perá, ceruzky a dlane vyťukávajú spoločný rytmus (potichu)."
+    ],
+    zs2: [
+      "Vytleskajte krátku vetu po slabikách a nechajte druhú skupinu hádať, ktorá to bola.",
+      "Dve skupiny, dva rytmy súčasne. Potom si ich vymenia.",
+      "Rytmický reťazec: každý vymyslí svoj úder a opakuje ho celé kolo.",
+      "Rytmus bez zvuku: vyťukávame ho len pohybom prstov, ostatní hádajú podľa pohľadu.",
+      "Zrýchľovanie: začíname pomaly a po každom kole zrýchlime o jeden stupeň."
+    ]
+  });
+  /* ďalšie dni a sviatky */
+  SPECIAL["1-1"] = ["Nový rok a Deň vzniku Slovenskej republiky", "1. januára 1993 vznikla samostatná Slovenská republika. Dnes sa začína aj nový kalendárny rok.", "Čo by si chcel/a zažiť alebo sa naučiť v novom roku?"];
+  SPECIAL["7-5"] = ["Sviatok svätého Cyrila a Metoda", "Cyril a Metod prišli na naše územie v roku 863 a priniesli písmo, ktoré sa nazýva hlaholika.", "Vymysli vlastný znak alebo písmeno a ukáž ho ostatným."];
+  SPECIAL["8-29"] = ["Výročie Slovenského národného povstania", "29. augusta 1944 sa začalo Slovenské národné povstanie proti vojne a útlaku. Na Slovensku si ho pripomíname každý rok.", "Čo znamená, že sa ľudia postavia za spravodlivosť a mier?"];
+  SPECIAL["9-1"] = ["Deň Ústavy Slovenskej republiky", "Ústava je základný zákon štátu. Hovorí o právach a povinnostiach ľudí.", "Aké pravidlá máme v našej triede a prečo sú dôležité?"];
+
+  /* ---------- veková úroveň ---------- */
+  function level(s) { return s.type === "ms" ? "ms" : (s.age <= 4 ? "zs1" : "zs2"); }
+  function reps(s) {
+    if (s.type === "ms") return s.age <= 4 ? 3 : 4;
+    return s.age <= 2 ? 4 : 5;
+  }
+  function ageLabel(s) {
+    return s.type === "ms" ? "MŠ, " + s.age + (s.age <= 4 ? " roky" : " rokov") : "ZŠ, " + s.age + ". ročník";
+  }
+  function ageNote(s, cat) {
+    if (s.type === "ms" && s.age <= 4) {
+      return cat === "ryt" ? "Pre najmenších stačí krátky, jednoduchý rytmus." :
+             cat === "dych" ? "Pre najmenších: kratšie a hravo, stačia tri opakovania." :
+             cat === "sit" ? "Pre najmenších: ukážte situáciu s maňuškou alebo plyšákom." : "Pre najmenších: stačí ukázať prstom alebo tvárou.";
+    }
+    return "";
+  }
+
+  /* ---------- zostavenie dňa ---------- */
+  function buildDay(d, s) {
+    var n = wdNum(d);
+    var L = level(s);
+    function pick(arr, off) { return arr[(((n + off) % arr.length) + arr.length) % arr.length]; }
+    var sp = SPECIAL[md(d)];
+    var fact = sp ? { title: sp[0], text: sp[1], q: sp[2], special: true }
+                  : (function () { var g = pick(GENERAL, 0); return { title: g[0], text: g[1], q: g[2], special: false }; })();
+    var theme = currentTheme(d);
+    var dy = pick(DYCH[L], 4);
+    var tasks = [
+      { c: "emo", cat: "Emócie", min: 3, text: pick(EMO[L], 0), note: ageNote(s, "emo") },
+      { c: "sit", cat: "Situácie a reakcie", min: 4, text: pick(SIT[L], 2), note: ageNote(s, "sit") },
+      { c: "dych", cat: "Dychové cvičenie", min: 3, title: dy[0], text: dy[1].replace("{n}", reps(s)), note: ageNote(s, "dych") },
+      { c: "rytmus", cat: "Rytmické cvičenie", min: 3, text: pick(RYT[L], 1), note: ageNote(s, "ryt") }
+    ];
+    if (theme) {
+      var wd = (d.getDay() + 6) % 7;
+      tasks.push({ c: "fakt", cat: "Téma týždňa", min: 4, title: theme, text: THEME_TASKS[wd](theme), note: "" });
+    } else {
+      tasks.push({ c: "fakt", cat: "Zaujímavosť dňa", min: 3, title: fact.title, text: fact.q, note: "" });
+    }
+    return { fact: fact, tasks: tasks, theme: theme };
+  }
+
+  function currentTheme(d) {
+    if (!settings || settings.type !== "ms" || !settings.theme) return "";
+    return settings.themeWeek === key(monday(d)) ? settings.theme : "";
+  }
+
+  /* ---------- vykresľovanie ---------- */
+  var app = document.getElementById("app");
+
+  function applyScale() { document.documentElement.style.setProperty("--scale", board ? "1.3" : (big ? "1.25" : "1")); }
+
+  function setWake(on) {
+    if (!on) {
+      wakeWanted = false;
+      if (wake) { try { wake.release(); } catch (e) {} wake = null; }
+      return;
+    }
+    wakeWanted = true;
+    try {
+      navigator.wakeLock.request("screen").then(function (l) {
+        wake = l;
+        l.addEventListener("release", function () { wake = null; });
+      }).catch(function () { hint = "Prehliadač nepovolil udržanie obrazovky zapnutej. Nastavte v počítači, aby sa displej nevypínal."; render(); });
+    } catch (e) { hint = "Tento prehliadač nepodporuje udržanie obrazovky zapnutej. Nastavte v počítači, aby sa displej nevypínal."; }
+  }
+  function goFullscreen() {
+    try {
+      if (document.fullscreenElement) { document.exitFullscreen(); return; }
+      var p = document.documentElement.requestFullscreen();
+      if (p && p.catch) p.catch(function () { hint = "Na celú obrazovku prepnite klávesom F11."; render(); });
+    } catch (e) { hint = "Na celú obrazovku prepnite klávesom F11."; render(); }
+  }
+
+  function renderMonth() {
+    applyScale();
+    app.className = "wrap";
+    var ref = monthRef || new Date(cur.getFullYear(), cur.getMonth(), 1, 12);
+    var y = ref.getFullYear(), m = ref.getMonth();
+    var first = new Date(y, m, 1, 12), last = new Date(y, m + 1, 0, 12);
+    var cells = "", full = 0, part = 0, miss = 0;
+    for (var d = monday(first); d <= last; d = addDays(d, 1)) {
+      if (isWeekend(d)) continue;
+      if (d.getMonth() !== m) { cells += "<div></div>"; continue; }
+      var ds = done[key(d)] || [];
+      var c = ds.filter(Boolean).length;
+      var isToday = key(d) === key(today);
+      var past = d < today && !isToday;
+      var cls = c === 5 ? "full" : (c > 0 ? "part" : (past ? "miss" : ""));
+      if (d <= today) { if (c === 5) full++; else if (c > 0) part++; else if (past) miss++; }
+      var st = c === 5 ? "✓" : (c > 0 ? c + "/5" : (past ? "–" : ""));
+      cells += '<button class="mcell ' + cls + (isToday ? " today" : "") + '" data-date="' + key(d) + '" aria-label="' + longDate(d) + (c ? ", splnené " + c + " z 5" : "") + '">' +
+        '<span class="dnum">' + d.getDate() + '.</span><span class="mst">' + st + '</span></button>';
+    }
+    var head = "";
+    DAYS_SHORT.forEach(function (n) { head += '<div class="mh">' + n + '</div>'; });
+    var h = '<div class="top"><div class="brand">Prehľad splnených kruhov</div><div class="tools"><button class="ghost" id="backday">Späť na dnešný deň</button></div></div>' +
+      '<div class="datehead"><h1>' + MONTHS_NOM[m] + " " + y + '</h1><div class="nav"><button id="mprev" aria-label="Predchádzajúci mesiac">←</button><button id="mnext" aria-label="Nasledujúci mesiac">→</button></div></div>' +
+      '<div class="legend"><span><b>' + monthPts(y, m) + '</b> bodov v mesiaci</span><span><b>' + full + '</b> dní splnených (5/5)</span><span><b>' + part + '</b> čiastočne</span><span><b>' + miss + '</b> bez odškrtnutia</span></div>' +
+      '<div class="mgrid">' + head + cells + '</div>';
+    app.innerHTML = h;
+    document.getElementById("backday").addEventListener("click", function () { view = "day"; monthRef = null; render(); });
+    document.getElementById("mprev").addEventListener("click", function () { monthRef = new Date(y, m - 1, 1, 12); renderMonth(); });
+    document.getElementById("mnext").addEventListener("click", function () { monthRef = new Date(y, m + 1, 1, 12); renderMonth(); });
+    Array.prototype.forEach.call(document.querySelectorAll(".mcell"), function (b) {
+      b.addEventListener("click", function () {
+        var p = b.getAttribute("data-date").split("-");
+        cur = atNoon(new Date(+p[0], +p[1] - 1, +p[2]));
+        view = "day"; monthRef = null; render();
+      });
+    });
+  }
+
+  function renderReg() {
+    var s = settings || { type: "ms", age: 5, cls: "" };
+    var h = '<form class="reg" id="regform">' +
+      '<div class="intro" id="intro">' + introHtml(s.type) + '</div>' +
+      '<h1>Ranný kruh na každý deň</h1>' +
+      '<p>Odpovedzte na dve otázky a aplikácia každý pracovný deň pripraví päť úloh pre vašu triedu.</p>' +
+      '<fieldset><legend>Kde pracujete?</legend><div class="choice">' +
+      '<label><input type="radio" name="type" value="ms"' + (s.type === "ms" ? " checked" : "") + '><span>Materská škola</span></label>' +
+      '<label><input type="radio" name="type" value="zs"' + (s.type === "zs" ? " checked" : "") + '><span>Základná škola</span></label>' +
+      '</div></fieldset>' +
+      '<div><label class="lab" for="age" id="agelab"></label><select id="age"></select></div>' +
+      '<div><label class="lab" for="cls">Názov triedy (nepovinné)</label><input type="text" id="cls" maxlength="40" value="' + esc(s.cls || "") + '" placeholder="napr. Lienky alebo 2. B"></div>' +
+      '<button class="go" type="submit">Pripraviť ranné kruhy</button>' +
+      (settings ? '<button class="cancel" type="button" id="cancelreg">Späť bez zmeny</button>' : '') +
+      '</form>';
+    app.innerHTML = h;
+    var form = document.getElementById("regform");
+    var sel = document.getElementById("age");
+    function fillAges() {
+      var t = form.elements["type"].value;
+      document.getElementById("intro").innerHTML = introHtml(t);
+      var opts = "";
+      if (t === "ms") {
+        document.getElementById("agelab").textContent = "Vek detí";
+        [3, 4, 5, 6].forEach(function (a) { opts += '<option value="' + a + '">' + a + (a <= 4 ? " roky" : " rokov") + (a === 6 ? " (predškoláci)" : "") + "</option>"; });
+      } else {
+        document.getElementById("agelab").textContent = "Ročník";
+        for (var a = 1; a <= 9; a++) opts += '<option value="' + a + '">' + a + ". ročník</option>";
+      }
+      sel.innerHTML = opts;
+      var want = s.type === t ? s.age : (t === "ms" ? 5 : 1);
+      sel.value = String(want);
+    }
+    fillAges();
+    Array.prototype.forEach.call(form.elements["type"], function (r) { r.addEventListener("change", fillAges); });
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var keepTheme = settings && settings.type === "ms" && form.elements["type"].value === "ms";
+      settings = {
+        type: form.elements["type"].value, age: parseInt(sel.value, 10), cls: document.getElementById("cls").value.trim(),
+        theme: keepTheme ? settings.theme : "", themeWeek: keepTheme ? settings.themeWeek : ""
+      };
+      save("rk.settings", settings);
+      editingReg = false;
+      render();
+    });
+    var c = document.getElementById("cancelreg");
+    if (c) c.addEventListener("click", function () { editingReg = false; render(); });
+  }
+
+  /* body: 1 bod za úlohu, +5 bonus za celý deň (spolu max 10 za deň) */
+  function dayPts(a) { var c = (a || []).filter(Boolean).length; return c + (c === 5 ? 5 : 0); }
+  function monthPts(y, m) {
+    var t = 0;
+    Object.keys(done).forEach(function (k) { var p = k.split("-"); if (+p[0] === y && +p[1] === m + 1) t += dayPts(done[k]); });
+    return t;
+  }
+  var LEVELS = [[0, "Semienko"], [30, "Klíčok"], [80, "Púčik"], [130, "Kvietok"], [180, "Strom"]];
+  function levelInfo(pts) {
+    var i = 0;
+    for (var j = 0; j < LEVELS.length; j++) if (pts >= LEVELS[j][0]) i = j;
+    var nx = LEVELS[i + 1];
+    return { name: LEVELS[i][1], next: nx ? nx[1] : null, left: nx ? nx[0] - pts : 0, pct: nx ? Math.round((pts - LEVELS[i][0]) / (nx[0] - LEVELS[i][0]) * 100) : 100 };
+  }
+  function rewardHtml(y, m) {
+    var pts = monthPts(y, m), li = levelInfo(pts);
+    return '<div class="reward"><div class="rtop"><span>Body v mesiaci ' + MONTHS_NOM[m].toLowerCase() + '</span><span class="rpts">' + pts + '</span></div>' +
+      '<div class="rbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + li.pct + '" aria-label="Postup k ďalšej úrovni"><span style="width:' + li.pct + '%"></span></div>' +
+      '<div class="rlvl">Úroveň: <b>' + li.name + '</b>' + (li.next ? ' · do úrovne ' + li.next + ' ešte ' + li.left + ' ' + (li.left === 1 ? "bod" : (li.left < 5 ? "body" : "bodov")) : ' · najvyššia úroveň') + '</div>' +
+      '<div class="rlvl">1 bod za každú úlohu a 5 bodov navyše za celý deň.</div></div>';
+  }
+  function longDate(d) { return DAYS[d.getDay()] + " " + d.getDate() + ". " + MONTHS[d.getMonth()]; }
+
+  function render() {
+    applyScale();
+    app.className = "wrap" + (board ? " board" : "");
+    if (!settings || editingReg) { app.className = "wrap"; renderReg(); return; }
+    if (view === "month") { renderMonth(); return; }
+    var d = cur;
+    var day = buildDay(d, settings);
+    var k = key(d);
+    var st = done[k] || [false, false, false, false, false];
+    var count = st.filter(Boolean).length;
+
+    var h = '<div class="top"><div class="brand">' + SUN + '<span>Ranný kruh <small>' + esc(settings.cls ? "· " + settings.cls + " " : "") + '· ' + ageLabel(settings) + '</small></span></div>' +
+      '<div class="tools">' +
+      (board ? '' : '<button class="ghost" id="monthbtn">Prehľad</button>') +
+      '<button class="ghost" id="boardbtn" aria-pressed="' + board + '">Tabuľový režim</button>' +
+      '<button class="ghost" id="wakebtn" aria-pressed="' + wakeWanted + '">Nevypínať obrazovku</button>' +
+      '<button class="ghost" id="fsbtn">Celá obrazovka</button>' +
+      (board ? '' : '<button class="ghost" id="bigbtn" aria-pressed="' + big + '">Veľké písmo</button>' +
+      '<button class="ghost" id="regbtn">Zmeniť triedu</button>') + '</div></div>';
+
+    h += '<div class="datehead"><div class="dleft"><div class="dbadge" aria-hidden="true"><span class="dm">' + MONTHS_SHORT[d.getMonth()] + '</span><span class="dd">' + d.getDate() + '</span></div>' +
+      '<div><h1>' + DAYS[d.getDay()] + '</h1>' +
+      '<div class="sub">' + d.getDate() + ". " + MONTHS[d.getMonth()] + " " + d.getFullYear() + (key(d) === key(today) ? " · dnes" : "") + '</div></div></div>' +
+      '<div class="nav"><button id="prev" aria-label="Predchádzajúci pracovný deň">←</button>' +
+      '<button id="todaybtn">Dnes</button>' +
+      '<button id="next" aria-label="Nasledujúci pracovný deň">→</button></div></div>';
+
+    if (startedOnWeekend && key(d) !== key(today) && key(d) === key(workday(today, 1))) {
+      h += '<div class="banner wk">Dnes je víkend. Zobrazujem najbližší pracovný deň.</div>';
+    }
+    if (hint) h += '<div class="banner">' + esc(hint) + '</div>';
+
+    // body týždňa: každý deň ukazuje, ktoré z piatich úloh sú splnené
+    var CATS = ["emo", "sit", "dych", "rytmus", "fakt"];
+    var CATN = ["Emócie", "Situácie a reakcie", "Dych", "Rytmus", "Zaujímavosť alebo téma"];
+    var CHK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+    var CRS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    var mon = monday(d), wsum = 0;
+    h += '<div class="week" role="group" aria-label="Splnené body v týždni"><div class="wrow whead" aria-hidden="true"><span></span>';
+    CATS.forEach(function (c, ci) { h += '<span class="wic t-' + c + '" title="' + CATN[ci] + '">' + ICONS[c] + '</span>'; });
+    h += '<span class="wtot">Body</span></div>';
+    for (var i = 0; i < 5; i++) {
+      var dd = addDays(mon, i);
+      var ds = done[key(dd)] || [];
+      var dc = ds.filter(Boolean).length;
+      wsum += dc;
+      var dPast = dd < today && key(dd) !== key(today);
+      var dcls = dc === 5 ? "full" : (dc > 0 ? "part" : (dPast ? "miss" : ""));
+      h += '<button class="wrow ' + dcls + '" data-date="' + key(dd) + '"' + (key(dd) === k ? ' aria-current="date"' : "") +
+        ' aria-label="' + longDate(dd) + ', splnené ' + dc + ' z 5">' +
+        '<span class="wday"><b>' + DAYS_SHORT[i] + '</b>' + dd.getDate() + '.</span>';
+      for (var j = 0; j < 5; j++) {
+        var on = !!ds[j];
+        h += '<span class="pt t-' + CATS[j] + (on ? " on" : (dPast ? " miss" : "")) + '">' + (on ? CHK : (dPast ? CRS : "")) + '</span>';
+      }
+      h += '<span class="wtot">' + ((dd <= today || dc) ? dc + "/5" : "") + '</span></button>';
+    }
+    h += '<div class="wsum">Splnené úlohy tento týždeň: ' + wsum + ' z 25</div></div>' + rewardHtml(d.getFullYear(), d.getMonth());
+
+    // téma týždňa (MŠ)
+    if (settings.type === "ms") {
+      var t = day.theme;
+      h += '<form class="themebar" id="themeform"><label for="themein">Téma týždňa</label>' +
+        '<input id="themein" type="text" maxlength="40" value="' + esc(t) + '" placeholder="napr. Jeseň, Zvieratká, Moja rodina">' +
+        '<button class="save" type="submit">' + (t ? "Zmeniť" : "Nastaviť") + '</button>' +
+        (t ? '<button class="clear" type="button" id="themeclear">Zrušiť tému</button>' : '') + '</form>';
+    }
+
+    // Dora a Doro
+    var isMs = settings.type === "ms";
+    var gmsg = guideMsg(count, day.fact.special, day.fact.title);
+    var gpair;
+    if (isMs) {
+      if (count === 0 && !day.fact.special) gmsg[2] = "Dobré ráno, deti! Som srnka a dnes vás ranným kruhom prevediem.";
+      gmsg[0] = "srnka";
+      gpair = deer(gmsg[1]);
+    } else {
+      gpair = face("dora", gmsg[0] === "dora" ? gmsg[1] : "smile") + face("doro", gmsg[0] === "doro" ? gmsg[1] : "smile");
+    }
+    h += '<div class="guide"><div class="pair">' + gpair + '</div>' +
+      '<div class="gtext"><div class="who">' + gname(gmsg[0]) + '</div><p>' + esc(gmsg[2]) + '</p></div></div>';
+
+    // zaujímavosť
+    h += '<section class="fact"><div class="fbadge">' + ICONS.fakt + '</div><div><div class="kicker">' + (day.fact.special ? "Dnešný deň" : "Zaujímavosť dňa") + '</div>' +
+      '<h2>' + esc(day.fact.title) + '</h2><p>' + esc(day.fact.text) + '</p>' +
+      (day.theme ? '<p class="q">Otázka: ' + esc(day.fact.q) + '</p>' : '') + '</div></section>';
+
+    // priebeh
+    var stars = "";
+    for (var si = 0; si < 5; si++) stars += STAR.replace("%C%", si < count ? " on" : "");
+    h += '<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="' + count + '" aria-label="Splnené úlohy"><div class="stars">' + stars + '</div><span>' + count + ' z 5 · ' + dayPts(st) + ' b.</span></div>';
+
+    h += '<ol class="tasks">';
+    day.tasks.forEach(function (tk, i) {
+      h += '<li class="task t-' + tk.c + (st[i] ? " done" : "") + '"><label>' +
+        '<input type="checkbox" data-i="' + i + '"' + (st[i] ? " checked" : "") + '>' +
+        '<span class="box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>' +
+        '<span class="ico" aria-hidden="true">' + ICONS[tk.c] + '</span><span class="body"><span class="cat">' + tk.cat + ' <span class="min">asi ' + tk.min + ' min</span></span>' +
+        (tk.title ? '<h3>' + esc(tk.title) + '</h3>' : '') +
+        '<p>' + esc(tk.text) + '</p>' +
+        (tk.note ? '<div class="note">' + esc(tk.note) + '</div>' : '') +
+        '<span class="says">' + face(sayer(tk.c), SAYS[tk.c][1]) + '<span>' + gname(sayer(tk.c)) + ': ' + SAYS[tk.c][2] + '</span></span>' +
+        '</span></label></li>';
+    });
+    h += '</ol>';
+
+    if (count === 5) {
+      h += '<div class="finish"><div class="fav">' + pairFace("cheer") + '</div><div><b>Hurá, ranný kruh máte hotový!</b>Za dnešok máte 10 bodov. Zakončite ho krátkym rituálom, napríklad spoločným zhlbokým výdychom alebo poďakovaním si v kruhu.</div></div>';
+    }
+
+    h += '<details><summary>Ako má ranný kruh prebiehať</summary><div class="inner">' +
+      '<ol><li><b>Príprava.</b> Posaďte sa do kruhu zo stoličiek alebo na podsedáky. Prípravu kruhu môžu robiť aj deti ako spoločný rituál.</li>' +
+      '<li><b>Rituál na začiatok.</b> Rovnaký každé ráno: pozdrav alebo krátke dychové cvičenie. Predvídateľnosť dáva deťom pocit bezpečia.</li>' +
+      '<li><b>Päť úloh.</b> Emócie, situácie a reakcie, dych, rytmus a zaujímavosť dňa alebo téma týždňa. Odškrtávajte ich podľa toho, ako ich stihnete.</li>' +
+      '<li><b>Rozlúčka.</b> Krátke zhrnutie alebo poďakovanie, aby deti prešli do bežného dňa.</li></ol>' +
+      '<h4>Pravidlá kruhu</h4><ul>' +
+      '<li>Hovorí vždy len jeden, kto drží predmet (kamienok, šiška, maňuška).</li>' +
+      '<li>Každý má právo povedať „preskakujem“ bez vysvetľovania.</li>' +
+      '<li>Navzájom si neskáčeme do reči a neposmievame sa.</li>' +
+      '<li>Čo si deti v kruhu povedia, zostáva v kruhu.</li>' +
+      '<li>Odpovede nehodnotíme ako správne a nesprávne. Kruh nie je vhodný na riešenie konfliktov ani na pranier.</li>' +
+      '<li>Ak vy sami nemáte dnes kapacitu byť s deťmi v pokoji, ranný kruh radšej presuňte na iné ráno.</li></ul>' +
+      '<h4>Dĺžka</h4><p>Pre materskú školu približne 10 až 15 minút, pre základnú školu 10 až 20 minút. Úlohy v aplikácii je možné vynechať alebo skrátiť.</p>' +
+      '<div class="src">Zásady vychádzajú z príručky ranných kruhov Ministerstva školstva SR (12 bodov pre úspešné realizovanie ranných kruhov) a z pravidiel komunitného kruhu.</div>' +
+      '</div></details>';
+
+    app.innerHTML = h;
+    bind();
+  }
+
+  function bind() {
+    function $(id) { return document.getElementById(id); }
+    $("prev").addEventListener("click", function () { cur = workday(cur, -1); render(); });
+    $("next").addEventListener("click", function () { cur = workday(cur, 1); render(); });
+    $("todaybtn").addEventListener("click", function () { cur = isWeekend(today) ? workday(today, 1) : today; render(); });
+    if ($("regbtn")) $("regbtn").addEventListener("click", function () { editingReg = true; render(); });
+    if ($("bigbtn")) $("bigbtn").addEventListener("click", function () { big = !big; save("rk.big", big); render(); });
+    if ($("monthbtn")) $("monthbtn").addEventListener("click", function () { view = "month"; monthRef = null; render(); });
+    $("boardbtn").addEventListener("click", function () { board = !board; render(); });
+    $("wakebtn").addEventListener("click", function () { hint = ""; setWake(!wakeWanted); render(); });
+    $("fsbtn").addEventListener("click", function () { hint = ""; goFullscreen(); });
+    Array.prototype.forEach.call(document.querySelectorAll(".week button"), function (b) {
+      b.addEventListener("click", function () {
+        var p = b.getAttribute("data-date").split("-");
+        cur = atNoon(new Date(+p[0], +p[1] - 1, +p[2]));
+        render();
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".task input"), function (inp) {
+      inp.addEventListener("change", function () {
+        var k = key(cur);
+        var arr = (done[k] || [false, false, false, false, false]).slice();
+        arr[+inp.getAttribute("data-i")] = inp.checked;
+        done[k] = arr;
+        save("rk.done", done);
+        var focusIdx = inp.getAttribute("data-i");
+        render();
+        var again = document.querySelector('.task input[data-i="' + focusIdx + '"]');
+        if (again) again.focus();
+      });
+    });
+    var tf = $("themeform");
+    if (tf) {
+      tf.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var v = $("themein").value.trim();
+        settings.theme = v;
+        settings.themeWeek = v ? key(monday(cur)) : "";
+        save("rk.settings", settings);
+        render();
+      });
+      var tc = $("themeclear");
+      if (tc) tc.addEventListener("click", function () { settings.theme = ""; settings.themeWeek = ""; save("rk.settings", settings); render(); });
+    }
+  }
+
+  /* po polnoci alebo po prebudení počítača sa automaticky prepne na nový deň */
+  function rollover() {
+    var n = atNoon(new Date());
+    if (key(n) !== key(today)) {
+      var wasToday = key(cur) === key(today) || (isWeekend(today) && key(cur) === key(workday(today, 1)));
+      today = n;
+      startedOnWeekend = isWeekend(today);
+      if (wasToday) cur = isWeekend(today) ? workday(today, 1) : today;
+      var typing = document.activeElement && document.activeElement.tagName === "INPUT";
+      if (!typing) render();
+    }
+  }
+  setInterval(rollover, 60000);
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") {
+      rollover();
+      if (wakeWanted && !wake) setWake(true);
+    }
+  });
+
+  render();
+})();
+</script>
